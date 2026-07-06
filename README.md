@@ -9,7 +9,7 @@
 - 日本語・英語対応
 - Bootstrap 5
 - PHP 8
-- SQLite
+<!-- - SQLite -->
 
 ## Screenshot
 
