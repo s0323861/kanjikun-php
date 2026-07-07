@@ -6,22 +6,168 @@ $edit = $_GET['edit'] ?? $_POST['edit'] ?? '';
 
 $msg = '';
 
-// ディレクトリトラバーサル対策
-$id = basename($id);
+// --- 多言語設定の追加 ---
+$lang = $_GET['lang'] ?? $_POST['lang'] ?? 'ja';
+
+// 多言語文言配列の定義
+$text = [
+    'ja' => [
+        'title' => '幹事くん',
+        'start' => '始める',
+        'event_name' => 'イベントの名前を入力してください',
+        'top' => 'Top',
+        'back' => '戻る',
+        'error' => 'エラー',
+        'id_error' => 'idが取得できませんでした。',
+        'file_error' => 'ファイルが存在しません。',
+        'already_exists' => '既にファイルが存在します。',
+        'bad_id' => '不適切なIDです。',
+        'write_error' => 'ファイルの書き込みに失敗しました。',
+        'developed_by' => 'Developed by',
+        'delete' => '削除する',
+        'update' => '更新する',
+        'confirm_delete' => 'イベントを削除してよろしいですか？',
+        'cancel' => 'キャンセル',
+        'ok' => 'OK',
+        // index.php用
+        'welcome' => '「幹事くん」にようこそ',
+        'description' => '「幹事くん」はイベント・歓送迎会・忘年会・新年会・同窓会などの日程調整＆出欠確認を行うツールです。<br>無料・登録不要・使い捨て型のWebサービスです！まずめるボタンを押してイベントを作成しましょう。',
+        'step' => 'ステップ',
+        'basic_info' => 'イベントの基本情報',
+        'event_title_label' => 'イベント名',
+        'event_placeholder' => '例: ○○部 忘年会2026',
+        'memo_label' => 'メモ・詳細（任意）',
+        'memo_placeholder' => '場所の候補や会費、伝達事項などがあれば入力してください',
+        'next' => '次へ',
+        'prev' => '前へ',
+        'candidate_dates' => '候補日程の選択',
+        'candidate' => '候補日程',
+        'optional' => '（任意）',
+        'create_table' => '出欠表をつくる',
+        'success_title' => '出欠調整ページが完成しました！ 🎉',
+        'success_desc' => '下記の生成されたURLをコピーして、参加メンバーに共有してください。<br>以後、このURLページからメンバーがそれぞれの出欠回答を入力できるようになります。',
+        'generating' => 'URL生成中...',
+        // detail.php用
+        're_edit' => 'イベントを再編集する',
+        'attendance_status' => '出欠状況・回答一覧',
+        'name_header' => 'お名前',
+        'comment_header' => 'コメント',
+        'no_answers' => 'まだ出欠回答がありません。下のフォームから最初の回答を入力しましょう！',
+        'action_delete' => '削除',
+        'action_change' => '変更',
+        'confirm_answer_delete' => 'この回答を削除してもよろしいですか？',
+        'share_url_title' => 'このイベントの共有URL',
+        'share_url_desc' => '参加メンバーにこのURLを連絡して、出欠を入力してもらってください。',
+        'copy' => 'コピー',
+        'copy_success' => 'URLをクリップボードにコピーしました！',
+        'form_section_title' => '出欠を入力・更新する',
+        'participant_name' => '参加者のお名前',
+        'name_example' => '例: 山田太郎',
+        'answers_label' => '各日程の出欠回答',
+        'status_yes' => '◯ 行ける',
+        'status_maybe' => '△ 微妙',
+        'status_no' => '✕ 無理',
+        'comment_optional' => 'コメント（任意）',
+        'comment_example' => '例: 遅れて参加します！',
+        'register_attendance' => '出欠を登録する',
+        'back_to_top' => 'トップへ戻る',
+        // change.php用
+        'enter_attendance' => '出欠を入力する',
+        'display_name' => '表示名',
+        // edit.php用
+        'event_re_edit' => 'イベント再編集',
+        'danger_zone' => '危険エリア',
+        'danger_desc' => '※一度削除すると復旧はできません。ご注意ください。',
+        'delete_event_btn' => 'イベントを削除する',
+        'confirm_title' => '確認画面'
+    ],
+    'en' => [
+        'title' => 'Kanjikun',
+        'start' => 'Start',
+        'event_name' => 'Enter the event name',
+        'top' => 'Top',
+        'back' => 'Back',
+        'error' => 'Error',
+        'id_error' => 'Failed to retrieve the ID.',
+        'file_error' => 'The file does not exist.',
+        'already_exists' => 'The file already exists.',
+        'bad_id' => 'Invalid ID.',
+        'write_error' => 'Failed to write to the file.',
+        'developed_by' => 'Developed by',
+        'delete' => 'Delete',
+        'update' => 'Update',
+        'confirm_delete' => 'Are you sure you want to delete this event?',
+        'cancel' => 'Cancel',
+        'ok' => 'OK',
+        // index.php
+        'welcome' => 'Welcome to Kanjikun',
+        'description' => 'Kanjikun is a tool for scheduling events, welcome/farewell parties, year-end/New Year parties, alumni associations, and managing attendance.<br>It is a free, registration-free, and disposable web service! Press the start button to create your event.',
+        'step' => 'Step',
+        'basic_info' => 'Basic Event Information',
+        'event_title_label' => 'Event Name',
+        'event_placeholder' => 'e.g., Year-end Party 2026',
+        'memo_label' => 'Memo / Details (Optional)',
+        'memo_placeholder' => 'Enter location candidates, membership fees, or any notes here.',
+        'next' => 'Next',
+        'prev' => 'Prev',
+        'candidate_dates' => 'Select Candidate Dates',
+        'candidate' => 'Candidate Date',
+        'optional' => ' (Optional)',
+        'create_table' => 'Create Attendance Table',
+        'success_title' => 'Attendance page has been created! 🎉',
+        'success_desc' => 'Copy the generated URL below and share it with the participants.<br>From now on, members can enter their attendance from this URL page.',
+        'generating' => 'Generating URL...',
+        // detail.php
+        're_edit' => 'Edit Event',
+        'attendance_status' => 'Attendance Status / Responses',
+        'name_header' => 'Name',
+        'comment_header' => 'Comment',
+        'no_answers' => 'No responses yet. Let\'s enter the first response using the form below!',
+        'action_delete' => 'Delete',
+        'action_change' => 'Change',
+        'confirm_answer_delete' => 'Are you sure you want to delete this response?',
+        'share_url_title' => 'Share URL for this Event',
+        'share_url_desc' => 'Please send this URL to the participants to have them enter their attendance.',
+        'copy' => 'Copy',
+        'copy_success' => 'URL copied to clipboard!',
+        'form_section_title' => 'Enter / Update Attendance',
+        'participant_name' => 'Participant Name',
+        'name_example' => 'e.g., John Doe',
+        'answers_label' => 'Attendance for Each Date',
+        'status_yes' => '◯ Available',
+        'status_maybe' => '△ Tentative',
+        'status_no' => '✕ Unavailable',
+        'comment_optional' => 'Comment (Optional)',
+        'comment_example' => 'e.g., I will be arriving late!',
+        'register_attendance' => 'Submit Attendance',
+        'back_to_top' => 'Back to Top',
+        // change.php
+        'enter_attendance' => 'Enter Attendance',
+        'display_name' => 'Display Name',
+        // edit.php
+        'event_re_edit' => 'Edit Event',
+        'danger_zone' => 'Danger Zone',
+        'danger_desc' => '*Once deleted, it cannot be recovered. Please be careful.',
+        'delete_event_btn' => 'Delete Event',
+        'confirm_title' => 'Confirmation'
+    ]
+];
+
+// エラー判定変更
 if ($id === '' || $id === '.' || $id === '..') {
-    $msg = "idが取得できませんでした。";
+    $msg = $text[$lang]['id_error'];
 }
 
-// URLの組み立て
+// URLの組み立てに言語を含める
 $uri  = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
 $base_dir = substr($uri, 0, strrpos($uri, "/"));
-$url  = $base_dir . "/detail.php?id=" . urlencode($id);
+$url  = $base_dir . "/detail.php?id=" . urlencode($id) . "&lang=" . urlencode($lang);
 
 // ファイルの存在確認
 $file = "./data/" . $id . ".txt";
 if ($msg === '') {
     if (!file_exists($file)) {
-        $msg = "ファイルが存在しません。";
+        $msg = $text[$lang]['file_error'];
     }
 }
 
@@ -130,12 +276,12 @@ function h($str) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="<?= h($lang) ?>">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>幹事くん</title>
+  <title><?= h($text[$lang]['title']) ?></title>
   <link rel="shortcut icon" href="favicon.ico">
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -150,14 +296,11 @@ function h($str) {
 <header>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <div class="container">
-      <a href="./" class="navbar-brand"><i class="fa-solid fa-calendar-days"></i> 幹事くん</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-main" aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+      <a href="./?lang=<?= h($lang) ?>" class="navbar-brand"><i class="fa-solid fa-calendar-days"></i> <?= h($text[$lang]['title']) ?></a>
       <div class="collapse navbar-collapse" id="navbar-main">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
-            <a class="nav-link" href="<?= h($url) ?>"><i class="fa-solid fa-house"></i> Top</a>
+            <a class="nav-link" href="<?= h($url) ?>"><i class="fa-solid fa-house"></i> <?= h($text[$lang]['top']) ?></a>
           </li>
         </ul>
       </div>
@@ -173,9 +316,8 @@ function h($str) {
     <div class="row">
       <div class="col-12">
         <div class="page-header mb-4">
-          <h1 id="forms" class="display-6">出欠を入力する</h1>
-          <a class="btn btn-secondary" href="./detail.php?id=<?= h($id) ?>"><i class="fa-solid fa-chevron-left"></i> 戻る</a>
-        </div>
+          <h1 id="forms" class="display-6"><?= h($text[$lang]['enter_attendance']) ?></h1>
+          <a class="btn btn-secondary" href="./detail.php?id=<?= h($id) ?>&lang=<?= h($lang) ?>"><i class="fa-solid fa-chevron-left"></i> <?= h($text[$lang]['back']) ?></a>        </div>
       </div>
     </div>
 
@@ -183,7 +325,7 @@ function h($str) {
       <div class="col-12">
         <!-- BS5ではwellが廃止されたためcardで再現 -->
         <div class="card bg-light p-4 shadow-sm">
-          <form method="post" action="change.php?id=<?= h($id) ?>&sid=<?= h($sid) ?>">
+          <form method="post" action="change.php?id=<?= h($id) ?>&sid=<?= h($sid) ?>&lang=<?= h($lang) ?>">
             <input type="hidden" name="edit" value="go">
             <input type="hidden" name="id" value="<?= h($id) ?>">
             <input type="hidden" name="sid" value="<?= h($sid) ?>">
@@ -191,7 +333,7 @@ function h($str) {
             <fieldset>
               <!-- 表示名 -->
               <div class="row mb-3 align-items-center">
-                <label for="inputName" class="col-lg-2 col-form-label fw-bold">表示名</label>
+                <label for="inputName" class="col-lg-2 col-form-label fw-bold"><?= h($text[$lang]['display_name']) ?></label>
                 <div class="col-lg-10">
                   <input type="text" class="form-control" id="inputName" name="display" value="<?= h($disp) ?>" required>
                 </div>
@@ -282,7 +424,7 @@ function h($str) {
 
               <!-- コメント -->
               <div class="row mb-4 align-items-center">
-                <label for="inputComment" class="col-lg-2 col-form-label fw-bold">コメント</label>
+                <label for="inputComment" class="col-lg-2 col-form-label fw-bold"><?= h($text[$lang]['comment_header']) ?></label>
                 <div class="col-lg-10">
                   <input type="text" class="form-control" name="comment" id="inputComment" value="<?= h($com) ?>">
                 </div>
@@ -291,7 +433,7 @@ function h($str) {
               <!-- アクションボタン -->
               <div class="row mb-3">
                 <div class="col-lg-10 offset-lg-2">
-                  <button type="submit" class="btn btn-primary"><i class="fa-solid fa-rotate"></i> 更新する</button>
+                  <button type="submit" class="btn btn-primary"><i class="fa-solid fa-rotate"></i> <?= h($text[$lang]['update']) ?></button>
                 </div>
               </div>
 
@@ -300,7 +442,7 @@ function h($str) {
               <div class="row">
                 <div class="col-lg-10 offset-lg-2">
                   <!-- detail.php の削除仕様に合わせて調整してください -->
-                  <a href="detail.php?id=<?= h($id) ?>&sid=<?= h($sid) ?>&edit=delete" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i> 削除する</a>
+                  <a href="detail.php?id=<?= h($id) ?>&sid=<?= h($sid) ?>&lang=<?= h($lang) ?>&edit=delete" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i> <?= h($text[$lang]['delete']) ?></a>
                 </div>
               </div>
 
@@ -327,7 +469,7 @@ function h($str) {
 
   <!-- フッター -->
   <footer class="py-3 my-4">
-    <p class="text-muted">Developed by <a href="https://github.com/s0323861" class="text-decoration-none" target="_blank" rel="noopener">Akira Mukai</a> 2021</p>
+    <p class="text-muted">Developed by <a href="https://github.com/s0323861" class="text-decoration-none" target="_blank" rel="noopener">Akira Mukai</a> 2021-2026</p>
   </footer>
 
 </div>
