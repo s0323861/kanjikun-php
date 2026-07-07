@@ -1,152 +1,16 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
 
-// --- 多言語設定の追加 ---
+// 言語設定の取得（デフォルトは日本語 'ja'）
 $lang = $_REQUEST['lang'] ?? 'ja';
 
-// 多言語文言配列の定義
-$text = [
-    'ja' => [
-        'title' => '幹事くん',
-        'start' => '始める',
-        'event_name' => 'イベントの名前を入力してください',
-        'top' => 'Top',
-        'back' => '戻る',
-        'error' => 'エラー',
-        'id_error' => 'idが取得できませんでした。',
-        'file_error' => 'ファイルが存在しません。',
-        'already_exists' => '既にファイルが存在します。',
-        'bad_id' => '不適切なIDです。',
-        'write_error' => 'ファイルの書き込みに失敗しました。',
-        'developed_by' => 'Developed by',
-        'delete' => '削除する',
-        'update' => '更新する',
-        'confirm_delete' => 'イベントを削除してよろしいですか？',
-        'cancel' => 'キャンセル',
-        'ok' => 'OK',
-        // index.php用
-        'welcome' => '「幹事くん」にようこそ',
-        'description' => '「幹事くん」はイベント・歓送迎会・忘年会・新年会・同窓会などの日程調整＆出欠確認を行うツールです。<br>無料・登録不要・使い捨て型のWebサービスです！まずめるボタンを押してイベントを作成しましょう。',
-        'step' => 'ステップ',
-        'basic_info' => 'イベントの基本情報',
-        'event_title_label' => 'イベント名',
-        'event_placeholder' => '例: ○○部 忘年会2026',
-        'memo_label' => 'メモ・詳細（任意）',
-        'memo_placeholder' => '場所の候補や会費、伝達事項などがあれば入力してください',
-        'next' => '次へ',
-        'prev' => '前へ',
-        'candidate_dates' => '候補日程の選択',
-        'candidate' => '候補日程',
-        'optional' => '（任意）',
-        'create_table' => '出欠表をつくる',
-        'success_title' => '出欠調整ページが完成しました！ 🎉',
-        'success_desc' => '下記の生成されたURLをコピーして、参加メンバーに共有してください。<br>以後、このURLページからメンバーがそれぞれの出欠回答を入力できるようになります。',
-        'generating' => 'URL生成中...',
-        // detail.php用
-        're_edit' => 'イベントを再編集する',
-        'attendance_status' => '出欠状況・回答一覧',
-        'name_header' => 'お名前',
-        'comment_header' => 'コメント',
-        'no_answers' => 'まだ出欠回答がありません。下のフォームから最初の回答を入力しましょう！',
-        'action_delete' => '削除',
-        'action_change' => '変更',
-        'confirm_answer_delete' => 'この回答を削除してもよろしいですか？',
-        'share_url_title' => 'このイベントの共有URL',
-        'share_url_desc' => '参加メンバーにこのURLを連絡して、出欠を入力してもらってください。',
-        'copy' => 'コピー',
-        'copy_success' => 'URLをクリップボードにコピーしました！',
-        'form_section_title' => '出欠を入力・更新する',
-        'participant_name' => '参加者のお名前',
-        'name_example' => '例: 山田太郎',
-        'answers_label' => '各日程の出欠回答',
-        'status_yes' => '◯ 行ける',
-        'status_maybe' => '△ 微妙',
-        'status_no' => '✕ 無理',
-        'comment_optional' => 'コメント（任意）',
-        'comment_example' => '例: 遅れて参加します！',
-        'register_attendance' => '出欠を登録する',
-        'back_to_top' => 'トップへ戻る',
-        // change.php用
-        'enter_attendance' => '出欠を入力する',
-        'display_name' => '表示名',
-        // edit.php用
-        'event_re_edit' => 'イベント再編集',
-        'danger_zone' => '危険エリア',
-        'danger_desc' => '※一度削除すると復旧はできません。ご注意ください。',
-        'delete_event_btn' => 'イベントを削除する',
-        'confirm_title' => '確認画面'
-    ],
-    'en' => [
-        'title' => 'Kanjikun',
-        'start' => 'Start',
-        'event_name' => 'Enter the event name',
-        'top' => 'Top',
-        'back' => 'Back',
-        'error' => 'Error',
-        'id_error' => 'Failed to retrieve the ID.',
-        'file_error' => 'The file does not exist.',
-        'already_exists' => 'The file already exists.',
-        'bad_id' => 'Invalid ID.',
-        'write_error' => 'Failed to write to the file.',
-        'developed_by' => 'Developed by',
-        'delete' => 'Delete',
-        'update' => 'Update',
-        'confirm_delete' => 'Are you sure you want to delete this event?',
-        'cancel' => 'Cancel',
-        'ok' => 'OK',
-        // index.php
-        'welcome' => 'Welcome to Kanjikun',
-        'description' => 'Kanjikun is a tool for scheduling events, welcome/farewell parties, year-end/New Year parties, alumni associations, and managing attendance.<br>It is a free, registration-free, and disposable web service! Press the start button to create your event.',
-        'step' => 'Step',
-        'basic_info' => 'Basic Event Information',
-        'event_title_label' => 'Event Name',
-        'event_placeholder' => 'e.g., Year-end Party 2026',
-        'memo_label' => 'Memo / Details (Optional)',
-        'memo_placeholder' => 'Enter location candidates, membership fees, or any notes here.',
-        'next' => 'Next',
-        'prev' => 'Prev',
-        'candidate_dates' => 'Select Candidate Dates',
-        'candidate' => 'Candidate Date',
-        'optional' => ' (Optional)',
-        'create_table' => 'Create Attendance Table',
-        'success_title' => 'Attendance page has been created! 🎉',
-        'success_desc' => 'Copy the generated URL below and share it with the participants.<br>From now on, members can enter their attendance from this URL page.',
-        'generating' => 'Generating URL...',
-        // detail.php
-        're_edit' => 'Edit Event',
-        'attendance_status' => 'Attendance Status / Responses',
-        'name_header' => 'Name',
-        'comment_header' => 'Comment',
-        'no_answers' => 'No responses yet. Let\'s enter the first response using the form below!',
-        'action_delete' => 'Delete',
-        'action_change' => 'Change',
-        'confirm_answer_delete' => 'Are you sure you want to delete this response?',
-        'share_url_title' => 'Share URL for this Event',
-        'share_url_desc' => 'Please send this URL to the participants to have them enter their attendance.',
-        'copy' => 'Copy',
-        'copy_success' => 'URL copied to clipboard!',
-        'form_section_title' => 'Enter / Update Attendance',
-        'participant_name' => 'Participant Name',
-        'name_example' => 'e.g., John Doe',
-        'answers_label' => 'Attendance for Each Date',
-        'status_yes' => '◯ Available',
-        'status_maybe' => '△ Tentative',
-        'status_no' => '✕ Unavailable',
-        'comment_optional' => 'Comment (Optional)',
-        'comment_example' => 'e.g., I will be arriving late!',
-        'register_attendance' => 'Submit Attendance',
-        'back_to_top' => 'Back to Top',
-        // change.php
-        'enter_attendance' => 'Enter Attendance',
-        'display_name' => 'Display Name',
-        // edit.php
-        'event_re_edit' => 'Edit Event',
-        'danger_zone' => 'Danger Zone',
-        'danger_desc' => '*Once deleted, it cannot be recovered. Please be careful.',
-        'delete_event_btn' => 'Delete Event',
-        'confirm_title' => 'Confirmation'
-    ]
-];
+// 安全対策：許可する言語コードのみに制限（ディレクトリトラバーサル防止）
+if (!in_array($lang, ['ja', 'en'], true)) {
+    $lang = 'ja';
+}
+
+// 言語ファイルの読み込み（選択された言語の配列をダイレクトに格納）
+$text = require __DIR__ . "/lang/{$lang}.php";
 
 $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : '';
 $sid = isset($_REQUEST['sid']) ? $_REQUEST['sid'] : '';
@@ -154,12 +18,12 @@ $edit = isset($_REQUEST['edit']) ? $_REQUEST['edit'] : '';
 
 $msg = '';
 if ($id === '') {
-    $msg = $text[$lang]['id_error'];
+    $msg = $text['id_error'];
 }
 
 $file = "./data/" . $id . ".txt";
-if (!file_exists($file)) {
-    $msg = $text[$lang]['file_error'];
+if ($msg === '' && !file_exists($file)) {
+    $msg = $text['file_error'];
 }
 
 // 4桁のランダム文字列生成関数
@@ -200,7 +64,8 @@ if ($msg === '') {
 
     } elseif ($edit === 'delete' && $sid !== '') {
         if (file_exists($file)) {
-            $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            // FILE_SKIP_EMPTY_LINES を削除
+            $lines = file($file, FILE_IGNORE_NEW_LINES);
             $new_lines = [];
             
             for ($i = 0; $i < count($lines); $i++) {
@@ -229,7 +94,8 @@ $date3 = '';
 $people = [];
 
 if ($msg === '' && file_exists($file)) {
-    $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    // FILE_SKIP_EMPTY_LINES を削除し、空行もスキップせずに読み込む
+    $lines = file($file, FILE_IGNORE_NEW_LINES);
     if (isset($lines[0])) $name = $lines[0];
     if (isset($lines[1])) $memo = $lines[1];
     if (isset($lines[2])) {
@@ -249,7 +115,6 @@ $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" :
 $url = $protocol . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . "?id=" . htmlspecialchars($id, ENT_QUOTES, 'UTF-8') . "&lang=" . htmlspecialchars($lang, ENT_QUOTES, 'UTF-8');
 
 // 出欠ステータステキストの多言語対応
-// 例：後ろの記号を省いてすっきりさせる
 $maru_label = $lang === 'ja' ? '◯ 行ける' : '◯ Yes';
 $batsu_label = $lang === 'ja' ? '✕ 無理' : '✕ No';
 $sankaku_label = $lang === 'ja' ? '△ 微妙' : '△ Maybe';
@@ -279,7 +144,7 @@ function formatEventDate($dateStr) {
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?php echo htmlspecialchars($name ? $name . " - " . $text[$lang]['title'] : $text[$lang]['error'] . " - " . $text[$lang]['title'], ENT_QUOTES, 'UTF-8'); ?></title>
+  <title><?php echo htmlspecialchars($name ? $name . " - " . $text['title'] : $text['error'] . " - " . $text['title'], ENT_QUOTES, 'UTF-8'); ?></title>
   
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -435,7 +300,7 @@ function formatEventDate($dateStr) {
 <header>
   <nav class="navbar navbar-expand-lg navbar-white bg-white border-bottom fixed-top shadow-sm py-3">
     <div class="container">
-      <a href="./?lang=<?= urlencode($lang) ?>" class="navbar-brand fw-bold text-dark"><i class="fa fa-calendar-o text-primary"></i> <?= htmlspecialchars($text[$lang]['title'], ENT_QUOTES, 'UTF-8') ?></a>
+      <a href="./?lang=<?= urlencode($lang) ?>" class="navbar-brand fw-bold text-dark"><i class="fa fa-calendar-o text-primary"></i> <?= htmlspecialchars($text['title'], ENT_QUOTES, 'UTF-8') ?></a>
     </div>
   </nav>
 </header>
@@ -444,10 +309,10 @@ function formatEventDate($dateStr) {
 
   <?php if ($msg !== ''): ?>
     <div class="alert alert-danger rounded-4 p-4 shadow-sm" role="alert">
-        <h4 class="alert-heading fw-bold"><i class="fa fa-exclamation-triangle"></i> <?= htmlspecialchars($text[$lang]['error'], ENT_QUOTES, 'UTF-8') ?></h4>
+        <h4 class="alert-heading fw-bold"><i class="fa fa-exclamation-triangle"></i> <?= htmlspecialchars($text['error'], ENT_QUOTES, 'UTF-8') ?></h4>
         <p class="mb-0"><?php echo htmlspecialchars($msg, ENT_QUOTES, 'UTF-8'); ?></p>
         <hr>
-        <a href="./?lang=<?= urlencode($lang) ?>" class="btn btn-outline-danger btn-custom mt-2"><?= htmlspecialchars($text[$lang]['back_to_top'], ENT_QUOTES, 'UTF-8') ?></a>
+        <a href="./?lang=<?= urlencode($lang) ?>" class="btn btn-outline-danger btn-custom mt-2"><?= htmlspecialchars($text['back_to_top'], ENT_QUOTES, 'UTF-8') ?></a>
     </div>
   <?php else: ?>
 
@@ -459,34 +324,40 @@ function formatEventDate($dateStr) {
         
         <div class="mt-4">
             <a href="./edit.php?id=<?php echo urlencode($id); ?>&lang=<?= urlencode($lang) ?>" class="btn btn-outline-secondary btn-custom btn-sm">
-                <i class="fa fa-pencil-square-o"></i> <?= htmlspecialchars($text[$lang]['re_edit'], ENT_QUOTES, 'UTF-8') ?>
+                <i class="fa fa-pencil-square-o"></i> <?= htmlspecialchars($text['re_edit'], ENT_QUOTES, 'UTF-8') ?>
             </a>
         </div>
     </div>
 
     <div class="event-card">
-        <h2 class="section-title"><i class="fa fa-users"></i> <?= htmlspecialchars($text[$lang]['attendance_status'], ENT_QUOTES, 'UTF-8') ?></h2>
+        <h2 class="section-title"><i class="fa fa-users"></i> <?= htmlspecialchars($text['attendance_status'], ENT_QUOTES, 'UTF-8') ?></h2>
         
         <div class="table-responsive">
             <table class="table table-striped table-hover align-middle">
                 <thead>
                     <tr>
-                        <th><?= htmlspecialchars($text[$lang]['name_header'], ENT_QUOTES, 'UTF-8') ?></th>
-                        <th><?php echo htmlspecialchars(formatEventDate($date1), ENT_QUOTES, 'UTF-8'); ?></th>
+                        <th><?= htmlspecialchars($text['name_header'], ENT_QUOTES, 'UTF-8') ?></th>
+                        <?php if (!empty($date1)): ?>
+                            <th><?php echo htmlspecialchars(formatEventDate($date1), ENT_QUOTES, 'UTF-8'); ?></th>
+                        <?php endif; ?>
                         <?php if (!empty($date2)): ?>
                             <th><?php echo htmlspecialchars(formatEventDate($date2), ENT_QUOTES, 'UTF-8'); ?></th>
                         <?php endif; ?>
                         <?php if (!empty($date3)): ?>
                             <th><?php echo htmlspecialchars(formatEventDate($date3), ENT_QUOTES, 'UTF-8'); ?></th>
                         <?php endif; ?>
-                        <th><?= htmlspecialchars($text[$lang]['comment_header'], ENT_QUOTES, 'UTF-8') ?></th>
+                        <th><?= htmlspecialchars($text['comment_header'], ENT_QUOTES, 'UTF-8') ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($people)): ?>
                         <tr>
-                            <td colspan="<?php echo 2 + (!empty($date2)?1:0) + (!empty($date3)?1:0); ?>" class="text-center text-muted py-4">
-                                <?= htmlspecialchars($text[$lang]['no_answers'], ENT_QUOTES, 'UTF-8') ?>
+                            <?php
+                            // 存在する日程の数に応じて動的にcolspanを計算
+                            $col_count = 2 + (!empty($date1)?1:0) + (!empty($date2)?1:0) + (!empty($date3)?1:0);
+                            ?>
+                            <td colspan="<?php echo $col_count; ?>" class="text-center text-muted py-4">
+                                <?= htmlspecialchars($text['no_answers'], ENT_QUOTES, 'UTF-8') ?>
                             </td>
                         </tr>
                     <?php else: ?>
@@ -499,20 +370,22 @@ function formatEventDate($dateStr) {
                             $p_sid = isset($parts[4]) ? $parts[4] : '';
                             $p_com = isset($parts[5]) ? $parts[5] : '';
                         ?>
-<tr>
+                            <tr>
                                 <td>
                                     <span class="fw-bold text-dark"><?php echo htmlspecialchars($p_name, ENT_QUOTES, 'UTF-8'); ?></span>
                                     <div class="small mt-1">
                                         <a href="detail.php?id=<?php echo urlencode($id); ?>&edit=delete&sid=<?php echo urlencode($p_sid); ?>&lang=<?= urlencode($lang) ?>" 
-                                           class="text-danger text-decoration-none me-2" onclick="return confirm('<?= htmlspecialchars($text[$lang]['confirm_answer_delete'], ENT_QUOTES, 'UTF-8') ?>');">
-                                            <i class="fa fa-trash-o"></i> <?= htmlspecialchars($text[$lang]['action_delete'], ENT_QUOTES, 'UTF-8') ?>
+                                           class="text-danger text-decoration-none me-2" onclick="return confirm('<?= htmlspecialchars($text['confirm_answer_delete'], ENT_QUOTES, 'UTF-8') ?>');">
+                                            <i class="fa fa-trash-o"></i> <?= htmlspecialchars($text['action_delete'], ENT_QUOTES, 'UTF-8') ?>
                                         </a>
                                         <a href="./change.php?id=<?php echo urlencode($id); ?>&sid=<?php echo urlencode($p_sid); ?>&lang=<?= urlencode($lang) ?>" class="text-muted text-decoration-none">
-                                            <i class="fa fa-pencil"></i> <?= htmlspecialchars($text[$lang]['action_change'], ENT_QUOTES, 'UTF-8') ?>
+                                            <i class="fa fa-pencil"></i> <?= htmlspecialchars($text['action_change'], ENT_QUOTES, 'UTF-8') ?>
                                         </a>
                                     </div>
                                 </td>
-                                <td><?php echo getStatusIcon($a1, $maru, $batsu, $sankaku); ?></td>
+                                <?php if (!empty($date1)): ?>
+                                    <td><?php echo getStatusIcon($a1, $maru, $batsu, $sankaku); ?></td>
+                                <?php endif; ?>
                                 <?php if (!empty($date2)): ?>
                                     <td><?php echo getStatusIcon($a2, $maru, $batsu, $sankaku); ?></td>
                                 <?php endif; ?>
@@ -529,29 +402,28 @@ function formatEventDate($dateStr) {
     </div>
 
     <div class="event-card">
-        <h2 class="section-title"><i class="fa fa-link"></i> <?= htmlspecialchars($text[$lang]['share_url_title'], ENT_QUOTES, 'UTF-8') ?></h2>
-        <p class="text-muted small"><?= htmlspecialchars($text[$lang]['share_url_desc'], ENT_QUOTES, 'UTF-8') ?></p>
+        <h2 class="section-title"><i class="fa fa-link"></i> <?= htmlspecialchars($text['share_url_title'], ENT_QUOTES, 'UTF-8') ?></h2>
+        <p class="text-muted small"><?= htmlspecialchars($text['share_url_desc'], ENT_QUOTES, 'UTF-8') ?></p>
         <div class="input-group">
             <input type="text" class="form-control url-box font-monospace" id="share-url" value="<?php echo $url; ?>" readonly>
-            <button class="btn btn-outline-primary btn-custom" type="button" onclick="copyUrl()"><i class="fa fa-clipboard"></i> <?= htmlspecialchars($text[$lang]['copy'], ENT_QUOTES, 'UTF-8') ?></button>
+            <button class="btn btn-outline-primary btn-custom" type="button" onclick="copyUrl()"><i class="fa fa-clipboard"></i> <?= htmlspecialchars($text['copy'], ENT_QUOTES, 'UTF-8') ?></button>
         </div>
     </div>
 
     <div class="event-card" id="enter-form">
-        <h2 class="section-title"><i class="fa fa-edit"></i> <?= htmlspecialchars($text[$lang]['form_section_title'], ENT_QUOTES, 'UTF-8') ?></h2>
+        <h2 class="section-title"><i class="fa fa-edit"></i> <?= htmlspecialchars($text['form_section_title'], ENT_QUOTES, 'UTF-8') ?></h2>
         
         <form method="post" action="detail.php?id=<?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?>&lang=<?= urlencode($lang) ?>">
             <input type="hidden" name="edit" value="go">
             
             <div class="mb-4">
-                <label for="inputDisplayName" class="form-label fw-bold"><?= htmlspecialchars($text[$lang]['participant_name'], ENT_QUOTES, 'UTF-8') ?> <span class="text-danger">*</span></label>
-                <input type="text" maxlength="15" class="form-control" id="inputDisplayName" name="display" placeholder="<?= htmlspecialchars($text[$lang]['name_example'], ENT_QUOTES, 'UTF-8') ?>" required>
+                <label for="inputDisplayName" class="form-label fw-bold"><?= htmlspecialchars($text['participant_name'], ENT_QUOTES, 'UTF-8') ?> <span class="text-danger">*</span></label>
+                <input type="text" maxlength="15" class="form-control" id="inputDisplayName" name="display" placeholder="<?= htmlspecialchars($text['name_example'], ENT_QUOTES, 'UTF-8') ?>" required>
             </div>
             
             <div class="mb-4">
-                <label class="form-label fw-bold mb-3"><?= htmlspecialchars($text[$lang]['answers_label'], ENT_QUOTES, 'UTF-8') ?></label>
+                <label class="form-label fw-bold mb-3"><?= htmlspecialchars($text['answers_label'], ENT_QUOTES, 'UTF-8') ?></label>
                 
-                <!-- 候補1 -->
                 <div class="card p-3 mb-3 border border-light-subtle bg-light-subtle rounded-3">
                     <div class="row align-items-center">
                         <div class="col-md-5 mb-2 mb-md-0 fw-bold text-secondary">
@@ -561,15 +433,15 @@ function formatEventDate($dateStr) {
                             <div class="status-radio-group">
                                 <div class="status-radio-btn radio-yes">
                                     <input type="radio" name="date1" id="date1_yes" value="yes">
-                                    <label for="date1_yes"><?= htmlspecialchars($text[$lang]['status_yes'], ENT_QUOTES, 'UTF-8') ?></label>
+                                    <label for="date1_yes"><?= htmlspecialchars($text['status_yes'], ENT_QUOTES, 'UTF-8') ?></label>
                                 </div>
                                 <div class="status-radio-btn radio-notyet">
                                     <input type="radio" name="date1" id="date1_maybe" value="notyet" checked>
-                                    <label for="date1_maybe"><?= htmlspecialchars($text[$lang]['status_maybe'], ENT_QUOTES, 'UTF-8') ?></label>
+                                    <label for="date1_maybe"><?= htmlspecialchars($text['status_maybe'], ENT_QUOTES, 'UTF-8') ?></label>
                                 </div>
                                 <div class="status-radio-btn radio-nono">
                                     <input type="radio" name="date1" id="date1_no" value="nono">
-                                    <label for="date1_no"><?= htmlspecialchars($text[$lang]['status_no'], ENT_QUOTES, 'UTF-8') ?></label>
+                                    <label for="date1_no"><?= htmlspecialchars($text['status_no'], ENT_QUOTES, 'UTF-8') ?></label>
                                 </div>
                             </div>
                         </div>
@@ -586,15 +458,15 @@ function formatEventDate($dateStr) {
                             <div class="status-radio-group">
                                 <div class="status-radio-btn radio-yes">
                                     <input type="radio" name="date2" id="date2_yes" value="yes">
-                                    <label for="date2_yes"><?= htmlspecialchars($text[$lang]['status_yes'], ENT_QUOTES, 'UTF-8') ?></label>
+                                    <label for="date2_yes"><?= htmlspecialchars($text['status_yes'], ENT_QUOTES, 'UTF-8') ?></label>
                                 </div>
                                 <div class="status-radio-btn radio-notyet">
                                     <input type="radio" name="date2" id="date2_maybe" value="notyet" checked>
-                                    <label for="date2_maybe"><?= htmlspecialchars($text[$lang]['status_maybe'], ENT_QUOTES, 'UTF-8') ?></label>
+                                    <label for="date2_maybe"><?= htmlspecialchars($text['status_maybe'], ENT_QUOTES, 'UTF-8') ?></label>
                                 </div>
                                 <div class="status-radio-btn radio-nono">
                                     <input type="radio" name="date2" id="date2_no" value="nono">
-                                    <label for="date2_no"><?= htmlspecialchars($text[$lang]['status_no'], ENT_QUOTES, 'UTF-8') ?></label>
+                                    <label for="date2_no"><?= htmlspecialchars($text['status_no'], ENT_QUOTES, 'UTF-8') ?></label>
                                 </div>
                             </div>
                         </div>
@@ -612,15 +484,15 @@ function formatEventDate($dateStr) {
                             <div class="status-radio-group">
                                 <div class="status-radio-btn radio-yes">
                                     <input type="radio" name="date3" id="date3_yes" value="yes">
-                                    <label for="date3_yes"><?= htmlspecialchars($text[$lang]['status_yes'], ENT_QUOTES, 'UTF-8') ?></label>
+                                    <label for="date3_yes"><?= htmlspecialchars($text['status_yes'], ENT_QUOTES, 'UTF-8') ?></label>
                                 </div>
                                 <div class="status-radio-btn radio-notyet">
                                     <input type="radio" name="date3" id="date3_maybe" value="notyet" checked>
-                                    <label for="date3_maybe"><?= htmlspecialchars($text[$lang]['status_maybe'], ENT_QUOTES, 'UTF-8') ?></label>
+                                    <label for="date3_maybe"><?= htmlspecialchars($text['status_maybe'], ENT_QUOTES, 'UTF-8') ?></label>
                                 </div>
                                 <div class="status-radio-btn radio-nono">
                                     <input type="radio" name="date3" id="date3_no" value="nono">
-                                    <label for="date3_no"><?= htmlspecialchars($text[$lang]['status_no'], ENT_QUOTES, 'UTF-8') ?></label>
+                                    <label for="date3_no"><?= htmlspecialchars($text['status_no'], ENT_QUOTES, 'UTF-8') ?></label>
                                 </div>
                             </div>
                         </div>
@@ -630,12 +502,12 @@ function formatEventDate($dateStr) {
             </div>
 
             <div class="mb-4">
-                <label for="inputComment" class="form-label fw-bold"><?= htmlspecialchars($text[$lang]['comment_optional'], ENT_QUOTES, 'UTF-8') ?></label>
-                <input type="text" class="form-control" maxlength="20" name="comment" id="inputComment" placeholder="<?= htmlspecialchars($text[$lang]['comment_example'], ENT_QUOTES, 'UTF-8') ?>">
+                <label for="inputComment" class="form-label fw-bold"><?= htmlspecialchars($text['comment_optional'], ENT_QUOTES, 'UTF-8') ?></label>
+                <input type="text" class="form-control" maxlength="20" name="comment" id="inputComment" placeholder="<?= htmlspecialchars($text['comment_example'], ENT_QUOTES, 'UTF-8') ?>">
             </div>
 
             <div class="mt-4">
-                <button type="submit" class="btn btn-indigo btn-custom w-100 py-2"><i class="fa fa-user-plus me-1"></i> <?= htmlspecialchars($text[$lang]['register_attendance'], ENT_QUOTES, 'UTF-8') ?></button>
+                <button type="submit" class="btn btn-indigo btn-custom w-100 py-2"><i class="fa fa-user-plus me-1"></i> <?= htmlspecialchars($text['register_attendance'], ENT_QUOTES, 'UTF-8') ?></button>
             </div>
         </form>
     </div>
@@ -643,20 +515,39 @@ function formatEventDate($dateStr) {
   <?php endif; ?>
 
   <footer class="text-center">
-      <p><?= htmlspecialchars($text[$lang]['developed_by'], ENT_QUOTES, 'UTF-8') ?> <a href="https://github.com/s0323861" target="_blank">Akira Mukai</a> 2021-2026</p>
+      <p><?= htmlspecialchars($text['developed_by'], ENT_QUOTES, 'UTF-8') ?> <a href="https://github.com/s0323861" target="_blank">Akira Mukai</a> 2021-2026</p>
   </footer>
 </main>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="copyToast" class="toast align-items-center text-bg-success border-0 rounded-3 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        <i class="fa fa-check-circle me-2"></i> <?= htmlspecialchars($text['copy_success'], ENT_QUOTES, 'UTF-8') ?>
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 function copyUrl() {
     var copyText = document.getElementById("share-url");
     copyText.select();
     copyText.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(copyText.value);
-    alert("<?= htmlspecialchars($text[$lang]['copy_success'], ENT_QUOTES, 'UTF-8') ?>");
+    navigator.clipboard.writeText(copyText.value).then(function() {
+        // Bootstrap 5 の Toast インスタンスを取得して表示
+        var toastEl = document.getElementById('copyToast');
+        var toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+        toast.show();
+    }).catch(function(err) {
+        // 万が一クリップボードAPIが失敗した場合のフォールバック
+        alert("<?= htmlspecialchars($text['copy_success'], ENT_QUOTES, 'UTF-8') ?>");
+    });
 }
 </script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

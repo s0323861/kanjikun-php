@@ -9,472 +9,334 @@ $msg = '';
 // --- 多言語設定の追加 ---
 $lang = $_GET['lang'] ?? $_POST['lang'] ?? 'ja';
 
-// 多言語文言配列の定義
-$text = [
-    'ja' => [
-        'title' => '幹事くん',
-        'start' => '始める',
-        'event_name' => 'イベントの名前を入力してください',
-        'top' => 'Top',
-        'back' => '戻る',
-        'error' => 'エラー',
-        'id_error' => 'idが取得できませんでした。',
-        'file_error' => 'ファイルが存在しません。',
-        'already_exists' => '既にファイルが存在します。',
-        'bad_id' => '不適切なIDです。',
-        'write_error' => 'ファイルの書き込みに失敗しました。',
-        'developed_by' => 'Developed by',
-        'delete' => '削除する',
-        'update' => '更新する',
-        'confirm_delete' => 'イベントを削除してよろしいですか？',
-        'cancel' => 'キャンセル',
-        'ok' => 'OK',
-        // index.php用
-        'welcome' => '「幹事くん」にようこそ',
-        'description' => '「幹事くん」はイベント・歓送迎会・忘年会・新年会・同窓会などの日程調整＆出欠確認を行うツールです。<br>無料・登録不要・使い捨て型のWebサービスです！まずめるボタンを押してイベントを作成しましょう。',
-        'step' => 'ステップ',
-        'basic_info' => 'イベントの基本情報',
-        'event_title_label' => 'イベント名',
-        'event_placeholder' => '例: ○○部 忘年会2026',
-        'memo_label' => 'メモ・詳細（任意）',
-        'memo_placeholder' => '場所の候補や会費、伝達事項などがあれば入力してください',
-        'next' => '次へ',
-        'prev' => '前へ',
-        'candidate_dates' => '候補日程の選択',
-        'candidate' => '候補日程',
-        'optional' => '（任意）',
-        'create_table' => '出欠表をつくる',
-        'success_title' => '出欠調整ページが完成しました！ 🎉',
-        'success_desc' => '下記の生成されたURLをコピーして、参加メンバーに共有してください。<br>以後、このURLページからメンバーがそれぞれの出欠回答を入力できるようになります。',
-        'generating' => 'URL生成中...',
-        // detail.php用
-        're_edit' => 'イベントを再編集する',
-        'attendance_status' => '出欠状況・回答一覧',
-        'name_header' => 'お名前',
-        'comment_header' => 'コメント',
-        'no_answers' => 'まだ出欠回答がありません。下のフォームから最初の回答を入力しましょう！',
-        'action_delete' => '削除',
-        'action_change' => '変更',
-        'confirm_answer_delete' => 'この回答を削除してもよろしいですか？',
-        'share_url_title' => 'このイベントの共有URL',
-        'share_url_desc' => '参加メンバーにこのURLを連絡して、出欠を入力してもらってください。',
-        'copy' => 'コピー',
-        'copy_success' => 'URLをクリップボードにコピーしました！',
-        'form_section_title' => '出欠を入力・更新する',
-        'participant_name' => '参加者のお名前',
-        'name_example' => '例: 山田太郎',
-        'answers_label' => '各日程の出欠回答',
-        'status_yes' => '◯ 行ける',
-        'status_maybe' => '△ 微妙',
-        'status_no' => '✕ 無理',
-        'comment_optional' => 'コメント（任意）',
-        'comment_example' => '例: 遅れて参加します！',
-        'register_attendance' => '出欠を登録する',
-        'back_to_top' => 'トップへ戻る',
-        // change.php用
-        'enter_attendance' => '出欠を入力する',
-        'display_name' => '表示名',
-        // edit.php用
-        'event_re_edit' => 'イベント再編集',
-        'danger_zone' => '危険エリア',
-        'danger_desc' => '※一度削除すると復旧はできません。ご注意ください。',
-        'delete_event_btn' => 'イベントを削除する',
-        'confirm_title' => '確認画面'
-    ],
-    'en' => [
-        'title' => 'Kanjikun',
-        'start' => 'Start',
-        'event_name' => 'Enter the event name',
-        'top' => 'Top',
-        'back' => 'Back',
-        'error' => 'Error',
-        'id_error' => 'Failed to retrieve the ID.',
-        'file_error' => 'The file does not exist.',
-        'already_exists' => 'The file already exists.',
-        'bad_id' => 'Invalid ID.',
-        'write_error' => 'Failed to write to the file.',
-        'developed_by' => 'Developed by',
-        'delete' => 'Delete',
-        'update' => 'Update',
-        'confirm_delete' => 'Are you sure you want to delete this event?',
-        'cancel' => 'Cancel',
-        'ok' => 'OK',
-        // index.php
-        'welcome' => 'Welcome to Kanjikun',
-        'description' => 'Kanjikun is a tool for scheduling events, welcome/farewell parties, year-end/New Year parties, alumni associations, and managing attendance.<br>It is a free, registration-free, and disposable web service! Press the start button to create your event.',
-        'step' => 'Step',
-        'basic_info' => 'Basic Event Information',
-        'event_title_label' => 'Event Name',
-        'event_placeholder' => 'e.g., Year-end Party 2026',
-        'memo_label' => 'Memo / Details (Optional)',
-        'memo_placeholder' => 'Enter location candidates, membership fees, or any notes here.',
-        'next' => 'Next',
-        'prev' => 'Prev',
-        'candidate_dates' => 'Select Candidate Dates',
-        'candidate' => 'Candidate Date',
-        'optional' => ' (Optional)',
-        'create_table' => 'Create Attendance Table',
-        'success_title' => 'Attendance page has been created! 🎉',
-        'success_desc' => 'Copy the generated URL below and share it with the participants.<br>From now on, members can enter their attendance from this URL page.',
-        'generating' => 'Generating URL...',
-        // detail.php
-        're_edit' => 'Edit Event',
-        'attendance_status' => 'Attendance Status / Responses',
-        'name_header' => 'Name',
-        'comment_header' => 'Comment',
-        'no_answers' => 'No responses yet. Let\'s enter the first response using the form below!',
-        'action_delete' => 'Delete',
-        'action_change' => 'Change',
-        'confirm_answer_delete' => 'Are you sure you want to delete this response?',
-        'share_url_title' => 'Share URL for this Event',
-        'share_url_desc' => 'Please send this URL to the participants to have them enter their attendance.',
-        'copy' => 'Copy',
-        'copy_success' => 'URL copied to clipboard!',
-        'form_section_title' => 'Enter / Update Attendance',
-        'participant_name' => 'Participant Name',
-        'name_example' => 'e.g., John Doe',
-        'answers_label' => 'Attendance for Each Date',
-        'status_yes' => '◯ Available',
-        'status_maybe' => '△ Tentative',
-        'status_no' => '✕ Unavailable',
-        'comment_optional' => 'Comment (Optional)',
-        'comment_example' => 'e.g., I will be arriving late!',
-        'register_attendance' => 'Submit Attendance',
-        'back_to_top' => 'Back to Top',
-        // change.php
-        'enter_attendance' => 'Enter Attendance',
-        'display_name' => 'Display Name',
-        // edit.php
-        'event_re_edit' => 'Edit Event',
-        'danger_zone' => 'Danger Zone',
-        'danger_desc' => '*Once deleted, it cannot be recovered. Please be careful.',
-        'delete_event_btn' => 'Delete Event',
-        'confirm_title' => 'Confirmation'
-    ]
-];
-
-// エラー判定変更
-if ($id === '' || $id === '.' || $id === '..') {
-    $msg = $text[$lang]['id_error'];
+// 安全対策：許可する言語コードのみに制限（ディレクトリトラバーサル防止）
+if (!in_array($lang, ['ja', 'en'], true)) {
+    $lang = 'ja';
 }
 
-// URLの組み立てに言語を含める
-$uri  = (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-$base_dir = substr($uri, 0, strrpos($uri, "/"));
-$url  = $base_dir . "/detail.php?id=" . urlencode($id) . "&lang=" . urlencode($lang);
+// 言語ファイルの読み込み（選択された言語の配列をダイレクトに格納）
+$text = require __DIR__ . "/lang/{$lang}.php";
 
-// ファイルの存在確認
+// 2. バリデーション
+if (empty($id) || empty($sid)) {
+    $msg = $text['id_error'];
+}
+
 $file = "./data/" . $id . ".txt";
-if ($msg === '') {
-    if (!file_exists($file)) {
-        $msg = $text[$lang]['file_error'];
-    }
+
+if (empty($msg) && !file_exists($file)) {
+    $msg = $text['file_error'];
 }
 
-// 変数の初期化
-$name = $memo = $date1 = $date2 = $date3 = '';
-$disp = $ans1 = $ans2 = $ans3 = $com = '';
+// 3. 更新処理（POST時かつ $edit === 'update' の場合）
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $edit === 'update' && empty($msg)) {
+    $disp = $_POST['display'] ?? '';
+    $ans1 = $_POST['date1']   ?? 'notyet';
+    $ans2 = $_POST['date2']   ?? 'notyet';
+    $ans3 = $_POST['date3']   ?? 'notyet';
+    $com  = $_POST['comment'] ?? '';
 
-// エラーがなければメイン処理を実行
-if ($msg === '') {
+    // タブ文字や改行のサニタイズ処理
+    $disp = str_replace(["$", "?", ".", "\t", "\n", "\r"], ["＄", "？", "．", " ", "", ""], $disp);
+    $disp = strip_tags($disp);
+    $com  = str_replace(["$", "?", ".", "\t", "\n", "\r"], ["＄", "？", "．", " ", "", ""], $com);
+    $com  = strip_tags($com);
 
-    // 【パターンA】編集して送信されてきた場合 (POST)
-    if ($edit === 'go') {
-        $disp = $_POST['display'] ?? '';
-        $ans1 = $_POST['date1'] ?? '';
-        $ans2 = $_POST['date2'] ?? '';
-        $ans3 = $_POST['date3'] ?? '';
-        $com  = $_POST['comment'] ?? '';
+    if (file_exists($file)) {
+        // 【修正】FILE_SKIP_EMPTY_LINES を削除し、空のメモ行を保持させる
+        $lines = file($file, FILE_IGNORE_NEW_LINES);
+        $new_lines = [];
 
-        // 禁則文字の置換とタグ除去
-        $disp = str_replace(['$', '?', '.', "\t"], ['＄', '？', '．', ' '], strip_tags($disp));
-        $com  = str_replace(['$', '?', '.', "\t"], ['＄', '？', '．', ' '], strip_tags($com));
-
-        // ファイルを読み込んで配列化
-        if ($fp = fopen($file, 'r')) {
-            flock($fp, LOCK_SH);
-            $all = [];
-            while (($line = fgets($fp)) !== false) {
-                $all[] = $line;
-            }
-            flock($fp, LOCK_UN);
-            fclose($fp);
-        }
-
-        // 配ラーの書き換え
-        $new = [];
-        foreach ($all as $i => $line) {
-            $line = rtrim($line, "\r\n");
-            if ($i === 0) {
-                $name = $line;
-            } elseif ($i === 1) {
-                $memo = $line;
-            } elseif ($i === 2) {
-                list($date1, $date2, $date3) = array_pad(explode("\t", $line), 3, '');
+        for ($i = 0; $i < count($lines); $i++) {
+            // ヘッダー行（イベント名、メモ、日程）はそのまま保持
+            if ($i <= 2) {
+                $new_lines[] = $lines[$i];
             } else {
-                $cols = explode("\t", $line);
-                $tmp5 = $cols[4] ?? '';
-                if ($tmp5 === $sid) {
-                    // 該当するセッションIDのデータを更新
-                    $line = implode("\t", [$disp, $ans1, $ans2, $ans3, $sid, $com]);
-                }
-            }
-            $new[] = $line . "\n";
-        }
-
-        // ファイルに書き戻し（排他ロック）
-        if ($fp = fopen($file, 'w')) {
-            flock($fp, LOCK_EX);
-            foreach ($new as $line) {
-                fwrite($fp, $line);
-            }
-            flock($fp, LOCK_UN);
-            fclose($fp);
-        }
-
-    // 【パターンB】最初にページを開いた場合 (GET)
-    } else {
-        if ($fp = fopen($file, 'r')) {
-            flock($fp, LOCK_SH);
-            $i = 0;
-            while (($line = fgets($fp)) !== false) {
-                $line = rtrim($line, "\r\n");
-                if ($i === 0) {
-                    $name = $line;
-                } elseif ($i === 1) {
-                    $memo = $line;
-                } elseif ($i === 2) {
-                    list($date1, $date2, $date3) = array_pad(explode("\t", $line), 3, '');
+                $parts = explode("\t", $lines[$i]);
+                // 一致するセッションID(sid)の行を見つけたら新しいデータに置き換える
+                if (isset($parts[4]) && $parts[4] === $sid) {
+                    $new_lines[] = $disp . "\t" . $ans1 . "\t" . $ans2 . "\t" . $ans3 . "\t" . $sid . "\t" . $com;
                 } else {
-                    $cols = explode("\t", $line);
-                    $tmp1 = $cols[0] ?? '';
-                    $tmp2 = $cols[1] ?? '';
-                    $tmp3 = $cols[2] ?? '';
-                    $tmp4 = $cols[3] ?? '';
-                    $tmp5 = $cols[4] ?? '';
-                    $tmp6 = $cols[5] ?? '';
-
-                    if ($tmp5 === $sid) {
-                        $disp = $tmp1;
-                        $ans1 = $tmp2;
-                        $ans2 = $tmp3;
-                        $ans3 = $tmp4;
-                        $com  = $tmp6;
-                    }
+                    $new_lines[] = $lines[$i];
                 }
-                $i++;
             }
-            flock($fp, LOCK_UN);
-            fclose($fp);
+        }
+        
+        // ファイルへ保存し、詳細画面へ遷移
+        if (file_put_contents($file, implode("\n", $new_lines) . "\n", LOCK_EX) === false) {
+            $msg = $text['write_error'];
+        } else {
+            header("Location: detail.php?id=" . urlencode($id) . "&lang=" . urlencode($lang));
+            exit;
         }
     }
 }
 
-// XSS対策（HTML出力用エスケープ関数の定義）
+// 4. 既存データの読み込み（フォームの初期値用）
+$event_name = '';
+$date1 = '';
+$date2 = '';
+$date3 = '';
+
+$current_display = '';
+$current_ans1    = 'notyet';
+$current_ans2    = 'notyet';
+$current_ans3    = 'notyet';
+$current_comment = '';
+
+if (empty($msg) && file_exists($file)) {
+    // 【修正】FILE_SKIP_EMPTY_LINES を削除し、行のズレを防ぐ
+    $lines = file($file, FILE_IGNORE_NEW_LINES);
+    
+    // イベント情報の取得
+    $event_name = $lines[0] ?? '';
+    if (isset($lines[2])) {
+        $dates = explode("\t", $lines[2]);
+        $date1 = $dates[0] ?? '';
+        $date2 = $dates[1] ?? '';
+        $date3 = $dates[2] ?? '';
+    }
+
+    // 対象ユーザーの回答データの取得
+    for ($i = 3; $i < count($lines); $i++) {
+        $parts = explode("\t", $lines[$i]);
+        if (isset($parts[4]) && $parts[4] === $sid) {
+            $current_display = $parts[0] ?? '';
+            $current_ans1    = $parts[1] ?? 'notyet';
+            $current_ans2    = $parts[2] ?? 'notyet';
+            $current_ans3    = $parts[3] ?? 'notyet';
+            $current_comment = $parts[5] ?? '';
+            break;
+        }
+    }
+}
+
+// エスケープ用関数
 function h($str) {
     return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+}
+
+// 日時表示の整形関数
+function formatEventDate($dateStr) {
+    if (empty($dateStr)) return '';
+    return str_replace('T', ' ', $dateStr);
 }
 ?>
 <!DOCTYPE html>
 <html lang="<?= h($lang) ?>">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?= h($text[$lang]['title']) ?></title>
-  <link rel="shortcut icon" href="favicon.ico">
-  <!-- Bootstrap 5 CSS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><?= h($text['enter_attendance']) ?> - <?= h($text['title']) ?></title>
+  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome 6 (最新の標準CDN) -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <style type="text/css">
-    body { padding-top: 80px; }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .main-container {
+      max-width: 700px;
+      margin: 50px auto;
+    }
+    .card {
+      border: none;
+      border-radius: 12px;
+    }
+    .shadow-custom {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+    .status-radio-group {
+      display: inline-flex;
+      background: #f3f4f6;
+      padding: 4px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 320px;
+    }
+    .status-radio-btn {
+      flex: 1;
+      text-align: center;
+    }
+    .status-radio-btn input[type="radio"] {
+      display: none;
+    }
+    .status-radio-btn label {
+      display: block;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #6b7280;
+      transition: all 0.15s ease;
+    }
+    .radio-yes input[type="radio"]:checked + label {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .radio-notyet input[type="radio"]:checked + label {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+    .radio-nono input[type="radio"]:checked + label {
+      background: #fee2e2;
+      color: #991b1b;
+    }
   </style>
 </head>
 <body>
 
-<header>
-  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+<header class="mb-4">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-      <a href="./?lang=<?= h($lang) ?>" class="navbar-brand"><i class="fa-solid fa-calendar-days"></i> <?= h($text[$lang]['title']) ?></a>
-      <div class="collapse navbar-collapse" id="navbar-main">
-        <ul class="navbar-nav me-auto mb-2 mb-md-0">
-          <li class="nav-item">
-            <a class="nav-link" href="<?= h($url) ?>"><i class="fa-solid fa-house"></i> <?= h($text[$lang]['top']) ?></a>
-          </li>
-        </ul>
-      </div>
+      <a class="navbar-brand" href="./?lang=<?= h($lang) ?>"><i class="fa-solid fa-calendar-days me-2"></i><?= h($text['title']) ?></a>
     </div>
   </nav>
 </header>
 
-<div class="container">
+<main class="container main-container">
+<?php if (empty($msg)): ?>
 
-<?php if ($msg === ''): ?>
-  <!-- フォームセクション -->
-  <section id="enter" class="my-4">
-    <div class="row">
-      <div class="col-12">
-        <div class="page-header mb-4">
-          <h1 id="forms" class="display-6"><?= h($text[$lang]['enter_attendance']) ?></h1>
-          <a class="btn btn-secondary" href="./detail.php?id=<?= h($id) ?>&lang=<?= h($lang) ?>"><i class="fa-solid fa-chevron-left"></i> <?= h($text[$lang]['back']) ?></a>        </div>
+  <div class="card shadow-custom p-4 p-md-5 bg-white mb-4">
+    <h1 class="h3 mb-2 fw-bold text-dark"><?= h($event_name) ?></h1>
+    <h2 class="h5 mb-4 text-secondary border-bottom pb-2">
+      <i class="fa-solid fa-user-pen me-2"></i><?= h($text['form_section_title']) ?>
+    </h2>
+    
+    <form method="post" action="change.php?id=<?= h($id) ?>&sid=<?= h($sid) ?>&edit=update&lang=<?= h($lang) ?>">
+      
+      <div class="mb-4">
+        <label for="display" class="form-label fw-bold"><?= h($text['participant_name']) ?> <span class="text-danger">*</span></label>
+        <input type="text" class="form-control py-2" id="display" name="display" maxlength="15" value="<?= h($current_display) ?>" required>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12">
-        <!-- BS5ではwellが廃止されたためcardで再現 -->
-        <div class="card bg-light p-4 shadow-sm">
-          <form method="post" action="change.php?id=<?= h($id) ?>&sid=<?= h($sid) ?>&lang=<?= h($lang) ?>">
-            <input type="hidden" name="edit" value="go">
-            <input type="hidden" name="id" value="<?= h($id) ?>">
-            <input type="hidden" name="sid" value="<?= h($sid) ?>">
-            
-            <fieldset>
-              <!-- 表示名 -->
-              <div class="row mb-3 align-items-center">
-                <label for="inputName" class="col-lg-2 col-form-label fw-bold"><?= h($text[$lang]['display_name']) ?></label>
-                <div class="col-lg-10">
-                  <input type="text" class="form-control" id="inputName" name="display" value="<?= h($disp) ?>" required>
+      
+      <div class="mb-4">
+        <label class="form-label fw-bold mb-3"><?= h($text['answers_label']) ?></label>
+        
+        <div class="card p-3 mb-3 border bg-light rounded-3">
+          <div class="row align-items-center">
+            <div class="col-md-5 mb-2 mb-md-0 fw-bold text-secondary">
+              <?= h(formatEventDate($date1)) ?>
+            </div>
+            <div class="col-md-7">
+              <div class="status-radio-group">
+                <div class="status-radio-btn radio-yes">
+                  <input type="radio" name="date1" id="date1_yes" value="yes" <?= $current_ans1 === 'yes' ? 'checked' : '' ?>>
+                  <label for="date1_yes"><?= h($text['status_yes']) ?></label>
+                </div>
+                <div class="status-radio-btn radio-notyet">
+                  <input type="radio" name="date1" id="date1_maybe" value="notyet" <?= $current_ans1 === 'notyet' ? 'checked' : '' ?>>
+                  <label for="date1_maybe"><?= h($text['status_maybe']) ?></label>
+                </div>
+                <div class="status-radio-btn radio-nono">
+                  <input type="radio" name="date1" id="date1_no" value="nono" <?= $current_ans1 === 'nono' ? 'checked' : '' ?>>
+                  <label for="date1_no"><?= h($text['status_no']) ?></label>
                 </div>
               </div>
-
-              <!-- 日にち候補テーブル -->
-              <div class="row mb-3">
-                <label class="col-lg-2 col-form-label fw-bold">日にち候補</label>
-                <div class="col-lg-10">
-                  <table class="table table-striped table-hover align-middle">
-                    <tbody>
-                      <!-- 候補1 -->
-                      <tr>
-                        <td><?= h($date1) ?></td>
-                        <td>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="date1" id="date1_yes" value="yes" <?= $ans1 === 'yes' ? 'checked' : '' ?>>
-                            <label class="form-check-label" Bres for="date1_yes"><i class="fa-regular fa-circle text-success"></i></label>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="date1" id="date1_notyet" value="notyet" <?= $ans1 === 'notyet' ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="date1_notyet"><i class="fa-solid fa-question text-warning"></i></label>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="date1" id="date1_nono" value="nono" <?= $ans1 === 'nono' ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="date1_nono"><i class="fa-solid fa-xmark text-danger"></i></label>
-                          </div>
-                        </td>
-                      </tr>
-
-                      <!-- 候補2 -->
-                      <?php if ($date2 !== ''): ?>
-                      <tr>
-                        <td><?= h($date2) ?></td>
-                        <td>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="date2" id="date2_yes" value="yes" <?= $ans2 === 'yes' ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="date2_yes"><i class="fa-regular fa-circle text-success"></i></label>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="date2" id="date2_notyet" value="notyet" <?= $ans2 === 'notyet' ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="date2_notyet"><i class="fa-solid fa-question text-warning"></i></label>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="date2" id="date2_nono" value="nono" <?= $ans2 === 'nono' ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="date2_nono"><i class="fa-solid fa-xmark text-danger"></i></label>
-                          </div>
-                        </td>
-                      </tr>
-                      <?php endif; ?>
-
-                      <!-- 候補3 -->
-                      <?php if ($date3 !== ''): ?>
-                      <tr>
-                        <td><?= h($date3) ?></td>
-                        <td>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="date3" id="date3_yes" value="yes" <?= $ans3 === 'yes' ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="date3_yes"><i class="fa-regular fa-circle text-success"></i></label>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="date3" id="date3_notyet" value="notyet" <?= $ans3 === 'notyet' ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="date3_notyet"><i class="fa-solid fa-question text-warning"></i></label>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="form-check">
-                            <input class="form-check-input" type="radio" name="date3" id="date3_nono" value="nono" <?= $ans3 === 'nono' ? 'checked' : '' ?>>
-                            <label class="form-check-label" for="date3_nono"><i class="fa-solid fa-xmark text-danger"></i></label>
-                          </div>
-                        </td>
-                      </tr>
-                      <?php endif; ?>
-                    </tbody>
-                  </table> 
-                </div>
-              </div>
-
-              <!-- コメント -->
-              <div class="row mb-4 align-items-center">
-                <label for="inputComment" class="col-lg-2 col-form-label fw-bold"><?= h($text[$lang]['comment_header']) ?></label>
-                <div class="col-lg-10">
-                  <input type="text" class="form-control" name="comment" id="inputComment" value="<?= h($com) ?>">
-                </div>
-              </div>
-
-              <!-- アクションボタン -->
-              <div class="row mb-3">
-                <div class="col-lg-10 offset-lg-2">
-                  <button type="submit" class="btn btn-primary"><i class="fa-solid fa-rotate"></i> <?= h($text[$lang]['update']) ?></button>
-                </div>
-              </div>
-
-              <hr>
-
-              <div class="row">
-                <div class="col-lg-10 offset-lg-2">
-                  <!-- detail.php の削除仕様に合わせて調整してください -->
-                  <a href="detail.php?id=<?= h($id) ?>&sid=<?= h($sid) ?>&lang=<?= h($lang) ?>&edit=delete" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i> <?= h($text[$lang]['delete']) ?></a>
-                </div>
-              </div>
-
-            </fieldset>
-          </form>
+            </div>
+          </div>
         </div>
+
+        <?php if (!empty($date2)): ?>
+        <div class="card p-3 mb-3 border bg-light rounded-3">
+          <div class="row align-items-center">
+            <div class="col-md-5 mb-2 mb-md-0 fw-bold text-secondary">
+              <?= h(formatEventDate($date2)) ?>
+            </div>
+            <div class="col-md-7">
+              <div class="status-radio-group">
+                <div class="status-radio-btn radio-yes">
+                  <input type="radio" name="date2" id="date2_yes" value="yes" <?= $current_ans2 === 'yes' ? 'checked' : '' ?>>
+                  <label for="date2_yes"><?= h($text['status_yes']) ?></label>
+                </div>
+                <div class="status-radio-btn radio-notyet">
+                  <input type="radio" name="date2" id="date2_maybe" value="notyet" <?= $current_ans2 === 'notyet' ? 'checked' : '' ?>>
+                  <label for="date2_maybe"><?= h($text['status_maybe']) ?></label>
+                </div>
+                <div class="status-radio-btn radio-nono">
+                  <input type="radio" name="date2" id="date2_no" value="nono" <?= $current_ans2 === 'nono' ? 'checked' : '' ?>>
+                  <label for="date2_no"><?= h($text['status_no']) ?></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($date3)): ?>
+        <div class="card p-3 mb-3 border bg-light rounded-3">
+          <div class="row align-items-center">
+            <div class="col-md-5 mb-2 mb-md-0 fw-bold text-secondary">
+              <?= h(formatEventDate($date3)) ?>
+            </div>
+            <div class="col-md-7">
+              <div class="status-radio-group">
+                <div class="status-radio-btn radio-yes">
+                  <input type="radio" name="date3" id="date3_yes" value="yes" <?= $current_ans3 === 'yes' ? 'checked' : '' ?>>
+                  <label for="date3_yes"><?= h($text['status_yes']) ?></label>
+                </div>
+                <div class="status-radio-btn radio-notyet">
+                  <input type="radio" name="date3" id="date3_maybe" value="notyet" <?= $current_ans3 === 'notyet' ? 'checked' : '' ?>>
+                  <label for="date3_maybe"><?= h($text['status_maybe']) ?></label>
+                </div>
+                <div class="status-radio-btn radio-nono">
+                  <input type="radio" name="date3" id="date3_no" value="nono" <?= $current_ans3 === 'nono' ? 'checked' : '' ?>>
+                  <label for="date3_no"><?= h($text['status_no']) ?></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <?php endif; ?>
       </div>
+
+      <div class="mb-4">
+        <label for="comment" class="form-label fw-bold"><?= h($text['comment_optional']) ?></label>
+        <input type="text" class="form-control py-2" id="comment" name="comment" maxlength="20" value="<?= h($current_comment) ?>" placeholder="<?= h($text['comment_example']) ?>">
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <a href="detail.php?id=<?= h($id) ?>&lang=<?= h($lang) ?>" class="btn btn-outline-secondary px-4 py-2 fw-bold">
+          <i class="fa-solid fa-arrow-left me-2"></i><?= h($text['back']) ?>
+        </a>
+        <button type="submit" class="btn btn-primary px-4 py-2 fw-bold">
+          <i class="fa-solid fa-rotate me-2"></i><?= h($text['update']) ?>
+        </button>
+      </div>
+    </form>
+    
+    <hr class="my-4">
+    <div class="text-end">
+      <a href="detail.php?id=<?= h($id) ?>&sid=<?= h($sid) ?>&lang=<?= h($lang) ?>&edit=delete" 
+         class="btn btn-outline-danger px-4 py-2 fw-bold" 
+         onclick="return confirm('<?= h($text['confirm_answer_delete']) ?>');">
+        <i class="fa-solid fa-trash-can me-2"></i><?= h($text['delete']) ?>
+      </a>
     </div>
-  </section>
+
+  </div>
 
 <?php else: ?>
-  <!-- エラーセクション -->
   <div class="row my-5">
     <div class="col-12 text-center">
-      <div class="alert alert-danger" role="alert">
-        <h1 class="alert-heading h3"><i class="fa-solid fa-triangle-exclamation"></i> エラー</h1>
+      <div class="alert alert-danger shadow-custom" role="alert">
+        <h1 class="alert-heading h3 fw-bold"><i class="fa-solid fa-triangle-exclamation me-2"></i><?= h($text['error']) ?></h1>
         <p class="lead mb-0"><?= h($msg) ?></p>
       </div>
+      <a href="./?lang=<?= h($lang) ?>" class="btn btn-outline-secondary mt-3"><i class="fa-solid fa-house me-2"></i><?= h($text['top']) ?></a>
     </div>
   </div>
 <?php endif; ?>
 
-  <hr>
+  <hr class="mt-5">
 
-  <!-- フッター -->
-  <footer class="py-3 my-4">
-    <p class="text-muted">Developed by <a href="https://github.com/s0323861" class="text-decoration-none" target="_blank" rel="noopener">Akira Mukai</a> 2021-2026</p>
+  <footer class="py-3 my-4 text-center">
+    <p class="text-muted"><?= h($text['developed_by']) ?> <a href="https://github.com/s0323861" target="_blank" class="text-decoration-none">Akira Mukai</a> 2021-2026</p>
   </footer>
+</main>
 
-</div>
-
-<!-- Bootstrap 5 JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
